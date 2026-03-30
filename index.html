@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fikir Bankası</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 500px;
+      margin: 50px auto;
+      background: #f4f4f4;
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+
+    .input-area {
+      display: flex;
+      gap: 10px;
+    }
+
+    input {
+      flex: 1;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      padding: 10px 14px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: black;
+      color: white;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin-top: 20px;
+    }
+
+    li {
+      background: #eee;
+      margin-top: 10px;
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 8px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 5px;
+    }
+
+    .delete {
+      background: red;
+    }
+
+    .edit {
+      background: orange;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <h2>💡 Fikir Bankası</h2>
+
+    <div class="input-area">
+      <input type="text" id="ideaInput" placeholder="Fikrini yaz...">
+      <button onclick="addIdea()">Ekle</button>
+    </div>
+
+    <ul id="ideaList"></ul>
+  </div>
+
+  <script>
+    let ideas = JSON.parse(localStorage.getItem("ideas")) || [];
+
+    function saveIdeas() {
+      localStorage.setItem("ideas", JSON.stringify(ideas));
+    }
+
+    function renderIdeas() {
+      const list = document.getElementById("ideaList");
+      list.innerHTML = "";
+
+      ideas.forEach((idea, index) => {
+        const li = document.createElement("li");
+
+        const span = document.createElement("span");
+        span.textContent = idea;
+
+        const actions = document.createElement("div");
+        actions.className = "actions";
+
+        const editBtn = document.createElement("button");
+        editBtn.textContent = "✏️";
+        editBtn.className = "edit";
+
+        editBtn.onclick = function() {
+          const newIdea = prompt("Düzenle:", idea);
+          if (newIdea !== null && newIdea.trim() !== "") {
+            ideas[index] = newIdea.trim();
+            saveIdeas();
+            renderIdeas();
+          }
+        };
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "❌";
+        deleteBtn.className = "delete";
+
+        deleteBtn.onclick = function() {
+          ideas.splice(index, 1);
+          saveIdeas();
+          renderIdeas();
+        };
+
+        actions.appendChild(editBtn);
+        actions.appendChild(deleteBtn);
+
+        li.appendChild(span);
+        li.appendChild(actions);
+
+        list.appendChild(li);
+      });
+    }
+
+    function addIdea() {
+      const input = document.getElementById("ideaInput");
+      const value = input.value.trim();
+
+      if (value === "") return;
+
+      ideas.push(value);
+      saveIdeas();
+
+      input.value = "";
+      renderIdeas();
+    }
+
+    // ENTER ile ekleme
+    document.getElementById("ideaInput").addEventListener("keypress", function(e) {
+      if (e.key === "Enter") {
+        addIdea();
+      }
+    });
+
+    renderIdeas();
+  </script>
+
+</body>
+</html>
