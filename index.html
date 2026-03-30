@@ -3,6 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- BASE VERIFY -->
+  <meta name="base:app_id" content="69ca2b8a0e56240fea198f16" />
+
   <title>Fikir Bankası</title>
 
   <style>
@@ -155,7 +159,6 @@
       renderIdeas();
     }
 
-    // ENTER ile ekleme
     document.getElementById("ideaInput").addEventListener("keypress", function(e) {
       if (e.key === "Enter") {
         addIdea();
